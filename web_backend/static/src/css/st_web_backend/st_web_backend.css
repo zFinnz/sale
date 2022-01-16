@@ -1,0 +1,30 @@
+.o_FormRenderer_chatterContainer {
+	max-width: 30% !important;
+}
+.show .dropdown-menu .dropdown-header {
+    color: #555 !important;
+}
+.dropdown-header {
+    font-size: 100% !important;
+    font-weight: 600 !important;
+}
+
+.o_form_view .o_notebook .tab-content .o_notebook_headers > .nav.nav-tabs {
+	border-bottom:0 !important;	
+}
+.o_form_view .o_notebook .o_notebook .tab-content {
+	border: 1px solid #ced4da;
+    padding: 20px;	
+}
+
+.o_form_view .o_notebook .o_notebook .o_notebook_headers > .nav.nav-tabs > .nav-item > a {
+	padding: 3px 10px;
+    font-size: 90%;
+    border-bottom: 0;
+}
+
+.o_form_view .o_notebook .o_notebook .o_notebook_headers .nav-item > a.active {
+	color: #00a09d !important;
+}
+
+

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+        <menuitem name="Sổ quỹ"
+            id="menu_sale_payment_root"
+            sequence="100" web_icon="sale_mg,static/src/img/payment_img.png"/>
+
+        <record id="payment_book_tree_view" model="ir.ui.view">
+            <field name="name">payment.book.tree</field>
+            <field name="model">payment.book</field>
+            <field name="arch" type="xml">
+                <tree string="book">
+                    <field name="name"/>
+                    <field name='total_payment' sum='Tổng'/>
+					<field name='total_recieve' sum='Tổng'/>
+					<field name="total_residual" sum='Tổng'/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="payment_book_form_view" model="ir.ui.view">
+            <field name="name">payment.book.form</field>
+            <field name="model">payment.book</field>
+            <field name="arch" type="xml">
+                <form string="book">
+                    <sheet>
+                        <group col='4'>
+                            <field name="name"/>
+                            <newline/>
+                            <separator string='Tổng hợp' colspan='4'/>
+                            <field name='total_recieve' class="oe_right"/>
+                            <field name='total_payment' class="oe_right"/>
+                            <field name="total_residual" class="oe_right"/>
+                        </group>
+                        <notebook>
+                            <page string="Chi tiết thu chi">
+								<field name="payments" string="payments">
+									<tree>
+										<field name='payment_date'/>
+										<field name="note"/>
+										<field name='total_payment' sum='Tổng chi'/>
+										<field name='total_recieve' sum='Tổng thu'/>
+										<field name="user_id"/>
+									</tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="action_payment_book" model="ir.actions.act_window">
+            <field name="name">Sổ quỹ</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">payment.book</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Sổ quỹ"
+            action="action_payment_book"
+            id="menu_payment_book"
+            parent="menu_sale_payment_root"
+            sequence="20"/>
+
+
+        <record id="sale_payment_tree_view" model="ir.ui.view">
+            <field name="name">sale.payment.tree</field>
+            <field name="model">sale.payment</field>
+            <field name="arch" type="xml">
+                <tree string="Payment" editable="top" multi_edit="1" sample="1">
+                    <field name='book_id' width="10%"/>
+                    <field name='payment_date' width="10%"/>
+					<field name="note" width="45%"/>
+					<field name='total_payment' sum='Tổng chi' width="10%"/>
+					<field name='total_recieve' sum='Tổng thu' width="10%"/>
+					<field name="user_id" width="10%"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="sale_payment_search_view">
+            <field name="name">Sale Payment Search</field>
+            <field name="model">sale.payment</field>
+            <field name="arch" type="xml">
+                <search string="Payment Search">
+                    <field name="note"/>
+					<separator/>
+                	<filter string="Phiếu chi" name='payment' domain="[('total_payment','>', 0)]"/>
+                    <filter string="Phiếu thu" name='recieve' domain="[('total_recieve','>', 0)]"/>
+                    <separator/>
+                    <filter string="Hôm nay" name="today" domain="[('payment_date','&lt;=', (datetime.date.today()).strftime('%Y-%m-%d')),('payment_date','&gt;=',(datetime.date.today()).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Hôm qua" name="yesterday" domain="[('payment_date','&gt;=', ((context_today()-datetime.timedelta(days=1)).strftime('%Y-%m-%d 00:00:00'))), ('payment_date','&lt;=', ((context_today()+datetime.timedelta(days=0)).strftime('%Y-%m-%d 00:00:00')))]"/>
+                    <filter string="Tháng này" name="month" domain="[('payment_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%Y-%m-%d')),('payment_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Tháng trước" name="prev_month" domain="[('payment_date','&gt;=',(context_today()-relativedelta(months=1)).strftime('%Y-%m-01')),('payment_date','&lt;',time.strftime('%Y-%m-01'))]"/>
+                    <group expand="0" string="Group By">
+                      <filter name="group_by_book_id" string="Sổ quỹ" context="{'group_by': 'book_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_sale_payment_payment" model="ir.actions.act_window">
+            <field name="name">Phiếu thu chi</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.payment</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <menuitem name="Nhật kí thu chi"
+            action="action_sale_payment_payment"
+            id="menu_sale_payment_payment"
+            parent="menu_sale_payment_root"
+            sequence="10"/>
+
+    </data>
+</odoo>

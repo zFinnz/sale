@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+<!--        <record id="view_order_mg_tree" model="ir.ui.view">-->
+<!--            <field name="name">sale.order.mg.tree</field>-->
+<!--            <field name="model">sale.order</field>-->
+<!--            <field name="priority">2</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <tree string="Đơn hàng" multi_edit="1" sample="1">-->
+<!--                    <field name="date_order" string="Ngày bán" widget="date"/>-->
+<!--                    <field name="partner_id" readonly="1"/>-->
+<!--                    <field name="cus_phone"/>-->
+<!--                    <field name="cus_address"/>-->
+<!--                    <field name="product_name"/>-->
+<!--                    <field name="sale_qty"/>-->
+<!--                    <field name="sale_weight"/>-->
+<!--                    <field name="total_shipping_amount" string="Tiền hàng" sum="Tổng" widget="monetary" optional="hide"/>-->
+<!--                    <field name="amount_total" string="Tổng" sum="Tổng tiền" widget="monetary" decoration-bf="1" optional="show"/>-->
+<!--                    <field name="note"/>-->
+<!--                    <field name="cus_info"/>-->
+<!--                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>-->
+<!--                    <field name="currency_id" invisible="1"/>-->
+<!--                </tree>-->
+<!--            </field>-->
+<!--        </record>-->
+
+        <record id="view_order_tree_inherit_mg" model="ir.ui.view">
+            <field name="name">sale.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='create_date']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='commitment_date']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='expected_date']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='activity_ids']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                 <xpath expr="//field[@name='team_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                 <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                 <xpath expr="//field[@name='amount_untaxed']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                 <xpath expr="//field[@name='amount_tax']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='state']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                 <xpath expr="//field[@name='invoice_status']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                 <xpath expr="//field[@name='partner_id']" position="before">
+                    <field name="date_order" string="Ngày bán" widget="date"/>
+                </xpath>
+                <xpath expr="//field[@name='amount_total']" position="before">
+                    <field name="cus_phone"/>
+                    <field name="cus_address"/>
+                    <field name="product_name"/>
+                    <field name="sale_qty"/>
+                    <field name="sale_weight"/>
+                    <field name="total_shipping_amount" string="Tiền hàng" sum="Tổng" widget="monetary"/>
+                </xpath>
+                <xpath expr="//field[@name='tag_ids']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='amount_total']" position="after">
+
+                    <field name="note" string="Ghi chú"/>
+                    <field name="cus_info"/>
+                    <field name="tag_ids" string="Thẻ" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="view_sales_order_mg_done_setting" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="priority">30</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='validity_date']" position="attributes">
+                <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='payment_term_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_quotation_send']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='other_information']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='customer_signature']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="cus_phone"/>
+                    <field name="cus_address"/>
+                    <field name="cus_info"/>
+                </xpath>
+                <xpath expr="//field[@name='date_order']" position="after">
+                    <field name="product_name"/>
+                    <field name="sale_qty"/>
+                    <field name="sale_weight"/>
+                    <field name="tag_ids"/>
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']//tree//field[@name='tax_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//group[@name='sale_total']" position="replace">
+                    <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                        <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}" string="Tiền hàng"/>
+                        <field name="shipping_amount" widget="monetary" options="{'currency_field': 'currency_id'}" string="Phí COD"/>
+                        <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                            <label for="amount_total"/>
+                        </div>
+                        <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_order_line_mg_tree" model="ir.ui.view">
+            <field name="name">sale.order.line.tree</field>
+            <field name="model">sale.order.line</field>
+            <field name="arch" type="xml">
+                <tree string="Sales Order Lines" create="false" decoration-danger="is_need_purchase==True">
+                    <field name="order_id" readonly="1"/>
+                    <field name="date_order" widget="date"/>
+                    <field name="order_partner_id"/>
+                    <field name="product_id"/>
+                    <field name="product_uom_qty" string="Số lượng"/>
+                    <field name="qty_available"/>
+                    <field name="virtual_available"/>
+                    <field name="price_subtotal" sum="Tổng" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="is_need_purchase" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_sales_order_line_filter_inherit_mg" model="ir.ui.view">
+            <field name="name">sale.order.search.inherit.sale</field>
+            <field name="model">sale.order.line</field>
+            <field name="arch" type="xml">
+                <search string="Search Sales Order">
+                    <filter string="Hôm nay" name="today" domain="[('date_order','&lt;=', (datetime.date.today()).strftime('%Y-%m-%d')),('date_order','&gt;=',(datetime.date.today()).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Hôm qua" name="yesterday" domain="[('date_order','&gt;=', ((context_today()-datetime.timedelta(days=1)).strftime('%Y-%m-%d 00:00:00'))), ('date_order','&lt;=', ((context_today()+datetime.timedelta(days=0)).strftime('%Y-%m-%d 00:00:00')))]"/>
+                    <filter string="Tháng này" name="month" domain="[('date_order','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%Y-%m-%d')),('date_order','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Tháng trước" name="prev_month" domain="[('date_order','&gt;=',(context_today()-relativedelta(months=1)).strftime('%Y-%m-01')),('date_order','&lt;',time.strftime('%Y-%m-01'))]"/>
+                    <separator/>
+                    <filter string="Thiếu hàng" name="is_need_purchase_filter" domain="[('is_need_purchase', '=', True)]"/>
+                    <separator/>
+                    <filter string="Sản phẩm" name="product" domain="[]" context="{'group_by':'product_id'}"/>
+                </search>
+            </field>
+        </record>
+
+         <record id="sale.action_quotations_with_onboarding" model="ir.actions.act_window">
+             <field name="context">{}</field>
+         </record>
+
+        <record id="view_sales_order_filter_inherit_mg" model="ir.ui.view">
+            <field name="name">sale.order.search.inherit.sale</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='my_quotation']" position="before">
+                    <filter string="Hôm nay" name="today" domain="[('date_order','&lt;=', (datetime.date.today()).strftime('%Y-%m-%d')),('date_order','&gt;=',(datetime.date.today()).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Hôm qua" name="yesterday" domain="[('date_order','&gt;=', ((context_today()-datetime.timedelta(days=1)).strftime('%Y-%m-%d 00:00:00'))), ('date_order','&lt;=', ((context_today()+datetime.timedelta(days=0)).strftime('%Y-%m-%d 00:00:00')))]"/>
+                    <filter string="Tháng này" name="month" domain="[('date_order','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%Y-%m-%d')),('date_order','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Tháng trước" name="prev_month" domain="[('date_order','&gt;=',(context_today()-relativedelta(months=1)).strftime('%Y-%m-01')),('date_order','&lt;',time.strftime('%Y-%m-01'))]"/>
+
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_orders_lines" model="ir.actions.act_window">
+            <field name="name">Chi tiết đơn hàng</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order.line</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_order_line_mg_tree"/>
+            <field name="search_view_id" ref="view_sales_order_line_filter_inherit_mg"/>
+        </record>
+
+        <menuitem
+            id="sale_order_line_menu"
+            name="Chi tiết đơn hàng"
+            action="action_orders_lines"
+            parent="sale.sale_order_menu"
+            sequence="2"
+        />
+
+    </data>
+</odoo>
